@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Seconds;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -51,6 +53,8 @@ public class RobotContainer {
   private final CANFuelSubsystem ballSubsystem = new CANFuelSubsystem(drivebase);
 
   private final LEDSubsystem led = new LEDSubsystem();
+
+  private boolean rumbleActive = false;
 
   // Define objects for other subsystems here
 
@@ -186,7 +190,38 @@ public class RobotContainer {
     driverController.povDown().whileTrue(shiftBack);
     driverController.povRight().whileTrue(shiftRight);
     driverController.povLeft().whileTrue(shiftLeft);
-
+    driverController
+        .a()
+        .onTrue(
+            Commands.runOnce(
+                    () -> {
+                      driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.5);
+                      System.out.println("Rumbling right");
+                    })
+                .ignoringDisable(true))
+        .onFalse(
+            Commands.runOnce(
+                    () -> {
+                      driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.0);
+                      System.out.println("Stopping rumble");
+                    })
+                .ignoringDisable(true));
+    driverController
+        .b()
+        .onTrue(
+            Commands.runOnce(
+                    () -> {
+                      driverController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+                      System.out.println("Rumbling left");
+                    })
+                .ignoringDisable(true))
+        .onFalse(
+            Commands.runOnce(
+                    () -> {
+                      driverController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
+                      System.out.println("Stopping rumble");
+                    })
+                .ignoringDisable(true));
     // Zero the gyro when 'start' is pressed on the driver's controller
     driverController
         .start()
@@ -257,6 +292,51 @@ public class RobotContainer {
   /** Set the LEDs to show robot status. */
   public void setLedStatus() {
     led.setPattern(LEDPattern.solid(Color.kDarkGreen));
+  }
+
+  public void setRumble() {
+    var timeRemaining = HubTracker.timeRemainingInCurrentShift();
+    double timeRemainingSeconds = timeRemaining.isPresent() ? timeRemaining.get().in(Seconds) : 0.0;
+
+    if (timeRemainingSeconds > 0.0 && timeRemainingSeconds < 2.0) {
+      if (HubTracker.isActive()) {
+        if (!rumbleActive) {
+          System.out.println(
+              "Rumbling Left for active shift end with "
+                  + timeRemainingSeconds
+                  + " seconds remaining");
+          driverController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+          // operatorController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+          rumbleActive = true;
+        }
+        driverController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+        // operatorController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+      } else {
+        if (!rumbleActive) {
+          System.out.println(
+              "Rumbling Right for inactive shift end with "
+                  + timeRemainingSeconds
+                  + " seconds remaining");
+
+          driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.5);
+          // operatorController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+          rumbleActive = true;
+        } // operatorController.setRumble(GenericHID.RumbleType.kRightRumble, 0.5);
+      }
+    } else {
+      if (rumbleActive) {
+        System.out.println("Stopping rumble");
+        rumbleActive = false;
+        driverController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
+      }
+
+      // operatorController.setRumble(GenericHID.RumbleType.kRightRumble, 0.0);
+    }
+    SmartDashboard.putNumber("Time Remaining Seconds", timeRemainingSeconds);
+  }
+
+  public void stopRumble() {
+    driverController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
   }
 
   /**

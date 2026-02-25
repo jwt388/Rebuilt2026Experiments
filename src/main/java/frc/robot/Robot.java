@@ -81,6 +81,7 @@ public class Robot extends TimedRobot {
     if (isSimulation() && simModel != null) {
       simModel.reset();
     }
+    robotContainer.stopRumble();
     robotContainer.setLeds(LEDPattern.solid(Color.kGray));
     robotContainer.setMotorBrake(true);
     disabledTimer.reset();
@@ -146,8 +147,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    // Call teleopPeriodic to share code between TeleOp and Auto.
-    teleopPeriodic();
+    datalog.startLoopTime();
+    // Add code to run repeatedly during Teleop mode.
+    robotContainer.setLedStatus();
   }
 
   /** This function is called once at the start of operator control. */
@@ -176,6 +178,7 @@ public class Robot extends TimedRobot {
     datalog.startLoopTime();
     // Add code to run repeatedly during Teleop mode.
     robotContainer.setLedStatus();
+    robotContainer.setRumble();
   }
 
   /** This function is called once at the start of test mode. */
