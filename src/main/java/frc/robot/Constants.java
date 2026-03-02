@@ -232,7 +232,7 @@ public final class Constants {
     public static final double EJECTING_FEEDER_VOLTAGE = 12;
     public static final double EJECTING_INTAKE_VOLTAGE = -6;
     public static final double RATE_LIMIT = 999.0; // volts per second
-    public static final boolean LAUNCH_TABLE_BOOLEAN = true;
+    public static final double ENABLE_LAUNCH_TABLE = 1;
     public static final LUT LAUNCH_TABLE =
         new LUT(new double[][] {{1.5, 2800.0}, {2.0, 3000.0}, {2.5, 3200.0}});
 

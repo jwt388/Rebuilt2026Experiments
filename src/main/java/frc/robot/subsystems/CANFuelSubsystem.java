@@ -67,6 +67,8 @@ public class CANFuelSubsystem extends SubsystemBase {
       new TunableNumber("Launcher Kv", FuelConstants.LAUNCHER_KV_VOLTS_PER_RPM);
   private TunableNumber launcherRpm =
       new TunableNumber("Launcher Speed RPM", FuelConstants.LAUNCHER_SPEED_RPM);
+  private TunableNumber enableLaunchTable =
+      new TunableNumber("Launcher Enable Table", FuelConstants.ENABLE_LAUNCH_TABLE);
 
   /** Creates a new CANFuelSubsystem. */
   public CANFuelSubsystem(SwerveSubsystem drive) {
@@ -153,7 +155,7 @@ public class CANFuelSubsystem extends SubsystemBase {
   public void launch() {
     loadPidfTunableNumbers();
     launcherEnabled = true;
-    if (FuelConstants.LAUNCH_TABLE_BOOLEAN) {
+    if (enableLaunchTable.get() > 0.0) {
       launcherGoal = FuelConstants.LAUNCH_TABLE.get(drive.getDistanceToHub())[1];
     } else {
       launcherGoal = launcherRpm.get();
