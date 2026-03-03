@@ -222,7 +222,7 @@ public class CANFuelSubsystem extends SubsystemBase {
         "Launcher/Voltage", launcherRoller.getAppliedOutput() * launcherRoller.getBusVoltage());
     SmartDashboard.putNumber(
         "Launcher2/Voltage", launcherRoller2.getAppliedOutput() * launcherRoller2.getBusVoltage());
-	SmartDashboard.putNumber(
+    SmartDashboard.putNumber(
         "Intake/Voltage", intakeRoller.getAppliedOutput() * intakeRoller.getBusVoltage());
     SmartDashboard.putNumber("Launcher/Velocity", launcherEncoder.getVelocity());
     SmartDashboard.putNumber("Launcher2/Velocity", launcherEncoder2.getVelocity());
