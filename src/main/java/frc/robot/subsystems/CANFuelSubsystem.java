@@ -67,6 +67,8 @@ public class CANFuelSubsystem extends SubsystemBase {
       new TunableNumber("Launcher Kv", FuelConstants.LAUNCHER_KV_VOLTS_PER_RPM);
   private TunableNumber launcherRpm =
       new TunableNumber("Launcher Speed RPM", FuelConstants.LAUNCHER_SPEED_RPM);
+  private TunableNumber enableLaunchTable =
+      new TunableNumber("Launcher Enable Table", FuelConstants.ENABLE_LAUNCH_TABLE);
 
   /** Creates a new CANFuelSubsystem. */
   public CANFuelSubsystem(SwerveSubsystem drive) {
@@ -153,7 +155,7 @@ public class CANFuelSubsystem extends SubsystemBase {
   public void launch() {
     loadPidfTunableNumbers();
     launcherEnabled = true;
-    if (FuelConstants.LAUNCH_TABLE_BOOLEAN) {
+    if (enableLaunchTable.get() > 0.0) {
       launcherGoal = FuelConstants.LAUNCH_TABLE.get(drive.getDistanceToHub())[1];
     } else {
       launcherGoal = launcherRpm.get();
@@ -214,16 +216,16 @@ public class CANFuelSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Intake/Goal", intakeGoal);
 
     SmartDashboard.putNumber("Launcher/Current", launcherRoller.getOutputCurrent());
-    SmartDashboard.putNumber("Launcher/Current2", launcherRoller2.getOutputCurrent());
+    SmartDashboard.putNumber("Launcher2/Current", launcherRoller2.getOutputCurrent());
     SmartDashboard.putNumber("Intake/Current", intakeRoller.getOutputCurrent());
     SmartDashboard.putNumber(
         "Launcher/Voltage", launcherRoller.getAppliedOutput() * launcherRoller.getBusVoltage());
     SmartDashboard.putNumber(
-        "Launcher/Voltage2", launcherRoller2.getAppliedOutput() * launcherRoller2.getBusVoltage());
-    SmartDashboard.putNumber(
+        "Launcher2/Voltage", launcherRoller2.getAppliedOutput() * launcherRoller2.getBusVoltage());
+	SmartDashboard.putNumber(
         "Intake/Voltage", intakeRoller.getAppliedOutput() * intakeRoller.getBusVoltage());
     SmartDashboard.putNumber("Launcher/Velocity", launcherEncoder.getVelocity());
-    SmartDashboard.putNumber("Launcher/Velocity2", launcherEncoder2.getVelocity());
+    SmartDashboard.putNumber("Launcher2/Velocity", launcherEncoder2.getVelocity());
     SmartDashboard.putNumber("Intake/Velocity", intakeEncoder.getVelocity());
 
     SmartDashboard.putNumber("Feeder/Current", feederRoller.getOutputCurrent());
@@ -234,12 +236,12 @@ public class CANFuelSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Distance to Hub", drive.getDistanceToHub());
 
     SmartDashboard.putNumber("Launcher/MotorTemp", launcherRoller.getMotorTemperature());
-    SmartDashboard.putNumber("Launcher/MotorTemp2", launcherRoller2.getMotorTemperature());
+    SmartDashboard.putNumber("Launcher2/MotorTemp", launcherRoller2.getMotorTemperature());
     SmartDashboard.putNumber("Feeder/MotorTemp", feederRoller.getMotorTemperature());
     SmartDashboard.putNumber("Intake/MotorTemp", intakeRoller.getMotorTemperature());
 
     SmartDashboard.putNumber("Launcher/BusVoltage", launcherRoller.getBusVoltage());
-    SmartDashboard.putNumber("Launcher/BusVoltage2", launcherRoller2.getBusVoltage());
+    SmartDashboard.putNumber("Launcher2/BusVoltage", launcherRoller2.getBusVoltage());
     SmartDashboard.putNumber("Feeder/BusVoltage", feederRoller.getBusVoltage());
     SmartDashboard.putNumber("Intake/BusVoltage", intakeRoller.getBusVoltage());
   }
