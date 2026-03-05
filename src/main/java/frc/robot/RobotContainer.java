@@ -144,6 +144,11 @@ public class RobotContainer {
       new DeferredCommand(() -> game.aimHubDriveCommand(driveAngularVelocity), Set.of(drivebase))
           .withName("Aim Hub Drive");
 
+  // Commands to drive to the closest spot that is at the ideal range to the hub and aim for launch.
+  private Command driveToLaunchPosition =
+      new DeferredCommand(game::createDriveLaunchCommand, Set.of(drivebase))
+          .withName("Drive to Launch");
+
   private SendableChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -186,10 +191,12 @@ public class RobotContainer {
     driverController
         .leftBumper()
         .whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-    // adjust the robot to the closest 46 degree angle
+    // adjust the robot to the closest 45 degree angle
     driverController.rightTrigger().whileTrue(diamondDrive);
     // adjust the robot to face the hub while driving
     driverController.leftTrigger().whileTrue(aimHubDrive);
+    // Drive to a launch position near the hub when 'A' is pressed on the driver's controller
+    driverController.a().whileTrue(driveToLaunchPosition);
 
     // Drives the robot slowly to a set position based on which of the pov buttons is pressed on the
     // driver's controller

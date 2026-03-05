@@ -1,14 +1,18 @@
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -28,6 +32,15 @@ public class Game {
   private static final double HUB_HEADING_TOL_DEG = 2.5;
   private static final double HUB_MIN_RADIUS_M = Units.feetToMeters(4.0);
   private static final double HUB_MAX_RADIUS_M = Units.feetToMeters(10.0);
+
+  /** meters, distance from hub to drive to for launching. */
+  private static final double LAUNCH_DISTANCE = Units.feetToMeters(4.5);
+
+  /** meters, distance from hub for the approach for launching. */
+  private static final double APPROACH_DISTANCE = LAUNCH_DISTANCE + Units.feetToMeters(1.0);
+
+  private StructArrayPublisher<Pose2d> posePublisher =
+      NetworkTableInstance.getDefault().getStructArrayTopic("Target Pose", Pose2d.struct).publish();
 
   public Game(SwerveSubsystem drive) {
     this.drivebase = drive;
@@ -123,6 +136,54 @@ public class Game {
   public Command aimHubDriveCommand(Supplier<ChassisSpeeds> velocity) {
     Pose2d hubTarget = isRedAlliance() ? RED_HUB_CENTER : BLUE_HUB_CENTER;
     return drivebase.aimAtPoseCommand(velocity, hubTarget);
+  }
+
+  /**
+   * Create a command to drive to a position at a fixed distance from the hub for launch.
+   *
+   * @return the command to drive to the launch position
+   */
+  public Command createDriveLaunchCommand() {
+
+    var rotationToHub = getAngleToHub();
+    double angleToHub;
+    if (drivebase.isRedAlliance()) {
+      angleToHub =
+          MathUtil.clamp(rotationToHub.minus(Rotation2d.fromDegrees(180)).getDegrees(), -45, 45)
+              + 180.0;
+    } else {
+      angleToHub = MathUtil.clamp(rotationToHub.getDegrees(), -45, 45);
+    }
+
+    return finalDriveLaunchCommand(Math.toRadians(angleToHub));
+  }
+
+  /**
+   * Create a command to drive to a the final position at a fixed distance and given angle from the
+   * hub for launch.
+   *
+   * @return the command to drive to the launch position
+   */
+  public Command finalDriveLaunchCommand(double angleToHub) {
+    Pose2d hubTarget = drivebase.isRedAlliance() ? RED_HUB_CENTER : BLUE_HUB_CENTER;
+
+    Rotation2d rotationToHub = new Rotation2d(angleToHub);
+
+    var targetPose1 =
+        new Pose2d(
+            hubTarget
+                .getTranslation()
+                .minus(new Translation2d(APPROACH_DISTANCE, 0.0).rotateBy(rotationToHub)),
+            rotationToHub.minus(new Rotation2d(Math.toRadians(180))));
+    var targetPose2 =
+        new Pose2d(
+            hubTarget
+                .getTranslation()
+                .minus(new Translation2d(LAUNCH_DISTANCE, 0.0).rotateBy(rotationToHub)),
+            rotationToHub.minus(new Rotation2d(Math.toRadians(180))));
+
+    return Commands.runOnce(() -> posePublisher.set(new Pose2d[] {targetPose1, targetPose2}))
+        .andThen(drivebase.driveToPosePID(targetPose1, targetPose2));
   }
 
   /** Periodic function to update SmartDashboard values. */

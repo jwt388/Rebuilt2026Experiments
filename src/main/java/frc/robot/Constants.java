@@ -161,7 +161,7 @@ public final class Constants {
      * angular acceleration).
      */
     public static final PathConstraints DRIVE_POSE_CONSTRAINTS =
-        new PathConstraints(1.0, 4.0, Units.degreesToRadians(180), Units.degreesToRadians(720));
+        new PathConstraints(2.0, 4.0, Units.degreesToRadians(360), Units.degreesToRadians(720));
 
     /** Distance from target at which to switch to PID control in meters. */
     public static final double DISTANCE_UNTIL_PID = Units.inchesToMeters(3);
