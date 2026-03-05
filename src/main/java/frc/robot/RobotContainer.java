@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Seconds;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -340,6 +342,13 @@ public class RobotContainer {
       if (isRobotOrangeReadyAtHub()) {
         desired = LEDPattern.solid(Color.kOrange);
       }
+    }
+
+    var timeRemaining = HubTracker.timeRemainingInCurrentShift();
+    double timeRemainingSeconds = timeRemaining.isPresent() ? timeRemaining.get().in(Seconds) : 0.0;
+
+    if (timeRemainingSeconds < 5.0 && timeRemainingSeconds > 0.0) {
+      desired = desired.blink(Seconds.of(0.5));
     }
 
     led.setPattern(desired);
