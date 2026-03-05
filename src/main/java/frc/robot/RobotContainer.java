@@ -148,7 +148,12 @@ public class RobotContainer {
   private Command driveToLaunchPosition =
       new DeferredCommand(game::createDriveLaunchCommand, Set.of(drivebase))
           .withName("Drive to Launch");
-
+  private Command driveThroughLeftTrench =
+      new DeferredCommand(() -> game.createDriveTrenchCommand(true), Set.of(drivebase))
+          .withName("Drive Left Trench");
+  private Command driveThroughRightTrench =
+      new DeferredCommand(() -> game.createDriveTrenchCommand(false), Set.of(drivebase))
+          .withName("Drive Right Trench");
   private SendableChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -197,6 +202,8 @@ public class RobotContainer {
     driverController.leftTrigger().whileTrue(aimHubDrive);
     // Drive to a launch position near the hub when 'A' is pressed on the driver's controller
     driverController.a().whileTrue(driveToLaunchPosition);
+    driverController.b().whileTrue(driveThroughLeftTrench);
+    driverController.x().whileTrue(driveThroughRightTrench);
 
     // Drives the robot slowly to a set position based on which of the pov buttons is pressed on the
     // driver's controller

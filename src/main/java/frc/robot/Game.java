@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -8,11 +10,13 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -165,7 +169,7 @@ public class Game {
    * @return the command to drive to the launch position
    */
   public Command finalDriveLaunchCommand(double angleToHub) {
-    Pose2d hubTarget = drivebase.isRedAlliance() ? RED_HUB_CENTER : BLUE_HUB_CENTER;
+    Pose2d hubTarget = isRedAlliance() ? RED_HUB_CENTER : BLUE_HUB_CENTER;
 
     Rotation2d rotationToHub = new Rotation2d(angleToHub);
 
@@ -184,6 +188,49 @@ public class Game {
 
     return Commands.runOnce(() -> posePublisher.set(new Pose2d[] {targetPose1, targetPose2}))
         .andThen(drivebase.driveToPosePID(targetPose1, targetPose2));
+  }
+
+  /**
+   * Create a command to drive to through the trench from the neutral zone.
+   *
+   * @return the command to drive to the launch position
+   */
+  public Command createDriveTrenchCommand(boolean useLeft) {
+    double angleToHub;
+
+    try {
+
+      // Load the right side path through the trench we want to pathfind to and follow
+      PathPlannerPath path = PathPlannerPath.fromPathFile("Through Trench");
+
+      if (isRedAlliance()) {
+        if (useLeft) {
+          angleToHub = Math.toRadians(135);
+        } else {
+          angleToHub = Math.toRadians(-135);
+        }
+      } else {
+        if (useLeft) {
+          angleToHub = Math.toRadians(-45);
+        } else {
+          angleToHub = Math.toRadians(45);
+        }
+      }
+
+      // Mirror the path if we want the left side. Alliance flipping is automatic.
+      if (useLeft) {
+        path = path.mirrorPath();
+      }
+
+      // Since AutoBuilder is configured, we can use it to build pathfinding commands
+      return AutoBuilder.pathfindThenFollowPath(path, DriveConstants.DRIVE_POSE_CONSTRAINTS)
+          .andThen(finalDriveLaunchCommand(angleToHub));
+
+    } catch (Exception e) {
+      // Handle exception as needed
+      DataLogManager.log("Error loading path: " + e.getMessage());
+      return Commands.none(); // Return a no-op command if path loading fails
+    }
   }
 
   /** Periodic function to update SmartDashboard values. */
