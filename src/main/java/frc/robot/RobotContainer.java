@@ -263,13 +263,9 @@ public class RobotContainer {
     led.setPattern(pattern);
   }
 
-  private static final double HUB_TARGET_RADIUS_M = Units.feetToMeters(4.0);
-  private static final double HUB_RADIUS_TOL_M = Units.inchesToMeters(6.0);
+  private static final double HUB_MIN_RADIUS_M = Units.feetToMeters(4.0);
+  private static final double HUB_MAX_RADIUS_M = Units.feetToMeters(10.0);
   private static final double HUB_HEADING_TOL_DEG = 8.0;
-  private static final double HUB_MIN_RADIUS_M = HUB_TARGET_RADIUS_M - HUB_RADIUS_TOL_M;
-  private static final double HUB_MAX_RADIUS_M = HUB_TARGET_RADIUS_M + HUB_RADIUS_TOL_M;
-  private static final double HUB_MIN_RADIUS_M_SQ = HUB_MIN_RADIUS_M * HUB_MIN_RADIUS_M;
-  private static final double HUB_MAX_RADIUS_M_SQ = HUB_MAX_RADIUS_M * HUB_MAX_RADIUS_M;
 
   private Pose2d getHubCenterPose() {
     var alliance = DriverStation.getAlliance();
@@ -286,10 +282,9 @@ public class RobotContainer {
     if (!isRobotOnAllianceSideOfHub(robotPose, hubPose)) return false;
 
     Translation2d hubToRobot = robotPose.getTranslation().minus(hubPose.getTranslation());
-    double distSq = hubToRobot.getX() * hubToRobot.getX() + hubToRobot.getY() * hubToRobot.getY();
-    if (distSq < HUB_MIN_RADIUS_M_SQ || distSq > HUB_MAX_RADIUS_M_SQ) return false;
-    Translation2d robotToHub = hubPose.getTranslation().minus(robotPose.getTranslation());
-    Rotation2d desiredHeading = robotToHub.getAngle(); // direction robot should face
+    double dist = hubToRobot.getNorm();
+    if (dist < HUB_MIN_RADIUS_M || dist > HUB_MAX_RADIUS_M) return false;
+    Rotation2d desiredHeading = hubToRobot.getAngle(); // direction robot should face
     Rotation2d currentHeading = robotPose.getRotation(); // robot’s current yaw
 
     double headingErrorDeg = Math.abs(desiredHeading.minus(currentHeading).getDegrees());
