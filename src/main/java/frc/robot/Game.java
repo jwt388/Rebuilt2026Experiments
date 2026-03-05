@@ -1,7 +1,10 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -42,6 +46,11 @@ public class Game {
 
   /** meters, distance from hub for the approach for launching. */
   private static final double APPROACH_DISTANCE = LAUNCH_DISTANCE + Units.feetToMeters(1.0);
+
+  /** Positions for entry and exist of the trench in meters. */
+  private static final double BLUE_TRENCH_NEUTRAL_X = 6.2;
+  private static final double BLUE_TRENCH_BLUE_X = 3.2;
+  private static final double TRENCH_Y = 0.625;
 
   private StructArrayPublisher<Pose2d> posePublisher =
       NetworkTableInstance.getDefault().getStructArrayTopic("Target Pose", Pose2d.struct).publish();
@@ -200,9 +209,34 @@ public class Game {
 
     try {
 
-      // Load the right side path through the trench we want to pathfind to and follow
-      PathPlannerPath path = PathPlannerPath.fromPathFile("Through Trench");
+      // Create a list of waypoints from poses. Each pose represents one waypoint.
+      // The rotation component of the pose should be the direction of travel. Do not use holonomic
+      // rotation.
+      List<Waypoint> waypoints =
+          PathPlannerPath.waypointsFromPoses(
+              new Pose2d(BLUE_TRENCH_NEUTRAL_X, TRENCH_Y, Rotation2d.fromDegrees(180)),
+              new Pose2d(BLUE_TRENCH_BLUE_X, TRENCH_Y, Rotation2d.fromDegrees(180)));
 
+      PathConstraints constraints =
+          new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
+
+      // Create the path using the waypoints created above
+      PathPlannerPath path =
+          new PathPlannerPath(
+              waypoints,
+              constraints,
+              null, // The ideal starting state, this is not relevant for on-the-fly paths.
+              new GoalEndState(
+                  1.5,
+                  Rotation2d.fromDegrees(
+                      90))); // Goal end state. 
+
+      // Mirror the path if we want the left side. Alliance flipping is automatic.
+      if (useLeft) {
+        path = path.mirrorPath();
+      }
+
+      // Determine the final angle to the hub based on alliance and trench side
       if (isRedAlliance()) {
         if (useLeft) {
           angleToHub = Math.toRadians(135);
@@ -217,10 +251,7 @@ public class Game {
         }
       }
 
-      // Mirror the path if we want the left side. Alliance flipping is automatic.
-      if (useLeft) {
-        path = path.mirrorPath();
-      }
+
 
       // Since AutoBuilder is configured, we can use it to build pathfinding commands
       return AutoBuilder.pathfindThenFollowPath(path, DriveConstants.DRIVE_POSE_CONSTRAINTS)
