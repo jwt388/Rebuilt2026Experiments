@@ -137,6 +137,19 @@ public class RobotContainer {
 
   Command shiftLeft = drivebase.driveFieldOriented(shiftLeftRobotOriented).withName("Shift Left");
 
+  // Commands to drive forward at low speed and intake
+  SwerveInputStream driveForwardForIntake =
+      SwerveInputStream.of(drivebase.getSwerveDrive(), () -> DriveConstants.POV_SPEED, () -> 0.0)
+          .withControllerRotationAxis(() -> driverController.getRightX() * -0.25)
+          .robotRelative(true)
+          .allianceRelativeControl(false);
+
+  Command driveAndIntake =
+      drivebase
+          .driveFieldOriented(driveForwardForIntake)
+          .alongWith(ballSubsystem.intakeCommand())
+          .withName("Drive and Intake");
+
   Command diamondDrive =
       drivebase.diamondDriveCommand(driveAngularVelocity).withName("Diamond Drive");
 
@@ -158,6 +171,10 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    // Initialize the game helper class once all subsystems have been created so it can get
+    // references to them.
+    game.init();
 
     // Publish subsystem data including commands
     SmartDashboard.putData(drivebase);
@@ -201,27 +218,18 @@ public class RobotContainer {
     // adjust the robot to face the hub while driving
     driverController.leftTrigger().whileTrue(aimHubDrive);
     // Drive to a launch position near the hub when 'A' is pressed on the driver's controller
-    driverController
-        .a()
-        .whileTrue(
-            driveToLaunchPosition.andThen(
-                ballSubsystem.launchCommand().withName("Launch after Drive to Hub")));
-    driverController.b().whileTrue(driveThroughLeftTrench);
-    driverController.x().whileTrue(driveThroughRightTrench);
+    driverController.a().whileTrue(driveToLaunchPosition);
+    driverController.x().whileTrue(driveThroughLeftTrench);
+    driverController.b().whileTrue(driveThroughRightTrench);
 
     // Drives the robot slowly to a set position based on which of the pov buttons is pressed on the
     // driver's controller
-    driverController.povUp().whileTrue(shiftForward);
+    driverController.povUp().whileTrue(driveAndIntake);
     driverController.povDown().whileTrue(shiftBack);
     driverController.povRight().whileTrue(shiftRight);
     driverController.povLeft().whileTrue(shiftLeft);
 
-    driverController
-        .y()
-        .whileTrue(
-            shiftForward
-                .alongWith(ballSubsystem.intakeCommand())
-                .withName("Drive Forward and Intake"));
+    driverController.povUp().whileTrue(driveAndIntake);
 
     // Zero the gyro when 'start' is pressed on the driver's controller
     driverController

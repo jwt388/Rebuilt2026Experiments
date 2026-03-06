@@ -59,9 +59,13 @@ public class Game {
   private StructArrayPublisher<Pose2d> posePublisher =
       NetworkTableInstance.getDefault().getStructArrayTopic("Target Pose", Pose2d.struct).publish();
 
+  /** Constructor for the Game class. */
   public Game(RobotContainer robotContainer) {
-
     this.robotContainer = robotContainer;
+  }
+
+  /** Initialize the game class by setting up subsystems. */
+  public void init() {
     this.drivebase = robotContainer.getDriveSubsystem();
     this.fuel = robotContainer.getBallSubsystem();
   }
@@ -203,7 +207,8 @@ public class Game {
             rotationToHub.minus(new Rotation2d(Math.toRadians(180))));
 
     return Commands.runOnce(() -> posePublisher.set(new Pose2d[] {targetPose1, targetPose2}))
-        .andThen(drivebase.driveToPosePID(targetPose1, targetPose2));
+        .andThen(drivebase.driveToPosePID(targetPose1, targetPose2))
+        .andThen(fuel.launchCommand());
   }
 
   /**

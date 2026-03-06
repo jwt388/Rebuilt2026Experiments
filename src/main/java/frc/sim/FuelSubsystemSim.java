@@ -147,8 +147,8 @@ public class FuelSubsystemSim {
       return;
     }
     ballCount--;
-    Pose3d robot = new Pose3d(drivebase.getPose()).transformBy(ROBOT_TO_LAUNCHER_TRANSFORM);
-    Translation3d initialPosition = robot.getTranslation();
+    Pose3d launchPose = new Pose3d(drivebase.getPose()).transformBy(ROBOT_TO_LAUNCHER_TRANSFORM);
+    Translation3d initialPosition = launchPose.getTranslation();
     LinearVelocity linearVel =
         MetersPerSecond.of(
             RPM.of(LAUNCH_RATIO * fuelSubsystem.getLauncherVelocity()).in(RadiansPerSecond)
@@ -156,6 +156,25 @@ public class FuelSubsystemSim {
     Angle angle = Degrees.of(110.0);
     Translation3d initialVelocity = exitVel(linearVel, angle, ROBOT_TO_LAUNCHER_TRANSFORM);
     FuelSim.getInstance().spawnFuel(initialPosition, initialVelocity);
+
+    // Pose3d launchPose = new Pose3d(drivebase.getPose()).plus(ROBOT_TO_LAUNCHER_TRANSFORM);
+    // ChassisSpeeds fieldSpeeds = drivebase.getRobotVelocity();
+    // LinearVelocity launchVelocity =
+    //     MetersPerSecond.of(
+    //         RPM.of(LAUNCH_RATIO * fuelSubsystem.getLauncherVelocity()).in(RadiansPerSecond)
+    //             * FLYWHEEL_RADIUS.in(Meters));
+    // Angle hoodAngle = Degrees.of(110.0);
+    // Angle turretYaw = Degrees.of(0.0);
+    // double horizontalVel = Math.cos(hoodAngle.in(Radians)) * launchVelocity.in(MetersPerSecond);
+    // double verticalVel = Math.sin(hoodAngle.in(Radians)) * launchVelocity.in(MetersPerSecond);
+    // double xVel = horizontalVel * Math.cos(turretYaw.in(Radians));
+    // double yVel = horizontalVel * Math.sin(turretYaw.in(Radians));
+
+    // xVel += fieldSpeeds.vxMetersPerSecond;
+    // yVel += fieldSpeeds.vyMetersPerSecond;
+
+    // FuelSim.getInstance()
+    //     .spawnFuel(launchPose.getTranslation(), new Translation3d(xVel, yVel, verticalVel));
   }
 
   /** A method to simulate ejecting a single ball from the hopper. */
