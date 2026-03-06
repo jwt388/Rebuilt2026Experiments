@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.CANFuelSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +28,9 @@ import java.util.function.Supplier;
 
 /** The Game class contains functions specific to the game. */
 public class Game {
+  private RobotContainer robotContainer;
   private SwerveSubsystem drivebase;
+  private CANFuelSubsystem fuel;
 
   // **Pose for red alliance to the hub in meters and degrees. */
   public static final Pose2d RED_HUB_CENTER =
@@ -49,14 +52,18 @@ public class Game {
 
   /** Positions for entry and exist of the trench in meters. */
   private static final double BLUE_TRENCH_NEUTRAL_X = 6.2;
+
   private static final double BLUE_TRENCH_BLUE_X = 3.2;
   private static final double TRENCH_Y = 0.625;
 
   private StructArrayPublisher<Pose2d> posePublisher =
       NetworkTableInstance.getDefault().getStructArrayTopic("Target Pose", Pose2d.struct).publish();
 
-  public Game(SwerveSubsystem drive) {
-    this.drivebase = drive;
+  public Game(RobotContainer robotContainer) {
+
+    this.robotContainer = robotContainer;
+    this.drivebase = robotContainer.getDriveSubsystem();
+    this.fuel = robotContainer.getBallSubsystem();
   }
 
   /**
@@ -226,10 +233,7 @@ public class Game {
               waypoints,
               constraints,
               null, // The ideal starting state, this is not relevant for on-the-fly paths.
-              new GoalEndState(
-                  1.5,
-                  Rotation2d.fromDegrees(
-                      90))); // Goal end state. 
+              new GoalEndState(1.5, Rotation2d.fromDegrees(90))); // Goal end state.
 
       // Mirror the path if we want the left side. Alliance flipping is automatic.
       if (useLeft) {
@@ -250,8 +254,6 @@ public class Game {
           angleToHub = Math.toRadians(45);
         }
       }
-
-
 
       // Since AutoBuilder is configured, we can use it to build pathfinding commands
       return AutoBuilder.pathfindThenFollowPath(path, DriveConstants.DRIVE_POSE_CONSTRAINTS)

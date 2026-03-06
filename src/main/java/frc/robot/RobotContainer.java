@@ -56,7 +56,7 @@ public class RobotContainer {
   private final LEDSubsystem led = new LEDSubsystem();
 
   // Helper functions for this year's game.
-  private final Game game = new Game(drivebase);
+  private final Game game = new Game(this);
 
   private final CANFuelSubsystem ballSubsystem = new CANFuelSubsystem(game);
 
@@ -201,7 +201,11 @@ public class RobotContainer {
     // adjust the robot to face the hub while driving
     driverController.leftTrigger().whileTrue(aimHubDrive);
     // Drive to a launch position near the hub when 'A' is pressed on the driver's controller
-    driverController.a().whileTrue(driveToLaunchPosition);
+    driverController
+        .a()
+        .whileTrue(
+            driveToLaunchPosition.andThen(
+                ballSubsystem.launchCommand().withName("Launch after Drive to Hub")));
     driverController.b().whileTrue(driveThroughLeftTrench);
     driverController.x().whileTrue(driveThroughRightTrench);
 
@@ -211,6 +215,13 @@ public class RobotContainer {
     driverController.povDown().whileTrue(shiftBack);
     driverController.povRight().whileTrue(shiftRight);
     driverController.povLeft().whileTrue(shiftLeft);
+
+    driverController
+        .y()
+        .whileTrue(
+            shiftForward
+                .alongWith(ballSubsystem.intakeCommand())
+                .withName("Drive Forward and Intake"));
 
     // Zero the gyro when 'start' is pressed on the driver's controller
     driverController
