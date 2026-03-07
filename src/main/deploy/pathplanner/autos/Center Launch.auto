@@ -7,19 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Drive"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
+            "pathName": "Center Drive"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Launch Ball"
+            "name": "Launch 8"
           }
         }
       ]

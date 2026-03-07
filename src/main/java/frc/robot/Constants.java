@@ -255,9 +255,10 @@ public final class Constants {
         new Transform3d(
             new Translation3d(Inches.of(15.0), Inches.zero(), Inches.of(2.0)), Rotation3d.kZero);
     public static final Distance FLYWHEEL_RADIUS = Inches.of(2);
-    public static final double TIME_BETWEEN_LAUNCHES = 0.5;
-    public static final double TIME_BETWEEN_EJECTS = 0.25;
+    public static final double TIME_BETWEEN_LAUNCHES = 0.3;
+    public static final double TIME_BETWEEN_INTAKES = 0.3;
+    public static final double TIME_BETWEEN_EJECTS = 0.3;
     public static final double LAUNCH_RATIO =
-        0.25; // Ratio of ball exit velocity launcher to wheel edge speed
+        0.375; // Ratio of ball exit velocity launcher to wheel edge speed
   }
 }

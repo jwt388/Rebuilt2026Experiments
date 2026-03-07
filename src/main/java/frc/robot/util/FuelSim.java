@@ -20,6 +20,7 @@ import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.wpilibj.DriverStation;
 import java.util.ArrayList;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -452,6 +453,17 @@ public class FuelSim {
     if (!running) return;
 
     stepSim();
+  }
+
+  /** Returns the current score of the alliance. */
+  public int getScore() {
+
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+      return Hub.RED_HUB.getScore();
+    } else {
+      return Hub.BLUE_HUB.getScore();
+    }
   }
 
   /** Run the simulation forward 1 time step (0.02s) */

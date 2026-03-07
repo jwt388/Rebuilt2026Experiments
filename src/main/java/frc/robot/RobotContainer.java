@@ -156,7 +156,9 @@ public class RobotContainer {
     drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
 
     // Named Commands for Autos
-    NamedCommands.registerCommand("Launch Ball", ballSubsystem.launchCommand().withTimeout(5.0));
+    NamedCommands.registerCommand("Launch 8", ballSubsystem.launchCommand().withTimeout(3.0));
+    NamedCommands.registerCommand("Launch Full", ballSubsystem.launchCommand().withTimeout(5.0));
+    NamedCommands.registerCommand("Intake", ballSubsystem.intakeCommand().withTimeout(10.0));
 
     // Setup the auto command chooser using the PathPlanner autos
     autoChooser = AutoBuilder.buildAutoChooser();

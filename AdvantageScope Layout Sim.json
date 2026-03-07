@@ -27,21 +27,17 @@
             "/photonvision/Arducam_OV9281_Left/rawBytes/targets",
             "/photonvision/Arducam_OV9281_Left/rawBytes/metadata",
             "/photonvision/Arducam_OV9281_Left/targetPose/translation",
-            "/SmartDashboard/VisionSystemSim-Vision",
             "/SmartDashboard/swerve/modules/frontright",
             "/SmartDashboard/swerve/imu",
             "/NT/SmartDashboard",
             "/NT/SmartDashboard/Swerve Drive/errors",
             "/NT/SmartDashboard/swerve/modules",
             "/NT/SmartDashboard/Robot",
-            "/FMSInfo",
             "/NT/SmartDashboard/TunableNumbers",
             "/NT/SmartDashboard/PDP",
             "/battery",
             "/NT/SmartDashboard/Battery",
-            "/Fuel Simulation",
-            "/SmartDashboard",
-            "/SmartDashboard/CANFuelSubsystem"
+            "/SmartDashboard/swerve/modules"
           ]
         },
         "tabs": {
@@ -60,9 +56,7 @@
               "title": "Mode",
               "controller": [
                 "DS:enabled",
-                "DS:autonomous",
-                "NT:/SmartDashboard/TunableNumbers/Launcher Kp",
-                "NT:/SmartDashboard/TunableNumbers/Launcher Kv"
+                "DS:autonomous"
               ],
               "controllerUUID": "1v9n2hm08o8sjtu9y2e237c71ctzocd4",
               "renderer": null,
@@ -98,7 +92,7 @@
                     "type": "ghostLegacy",
                     "logKey": "NT:/SmartDashboard/Field/Robot",
                     "logType": "NumberArray",
-                    "visible": true,
+                    "visible": false,
                     "options": {
                       "color": "#00ff00",
                       "format": "Pose2d",
@@ -142,35 +136,45 @@
                 ],
                 "game": "FRC:2026 Field"
               },
-              "controllerUUID": "qqbu79ijlta023f0h8i43wfrcey0g5ko",
+              "controllerUUID": "t0e7y83ndnmgel0p4g7ln3n35c8g9bb9",
               "renderer": {
                 "cameraIndex": -1,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  -0.06560484667432993,
-                  7.42836701218136,
-                  -13.3320448840372
+                  -0.18263061383685808,
+                  2.925443464419672,
+                  -6.152798903787446
                 ],
                 "cameraTarget": [
-                  -0.0656048466743316,
-                  1.175867359584853,
-                  0.3097725398097242
+                  -1.8254047166211123,
+                  0.21472818124090454,
+                  -0.9226822207851189
                 ]
               },
               "controlsHeight": 200
             },
             {
               "type": 1,
-              "title": "Sim Ball Count",
+              "title": "FuelSim",
               "controller": {
                 "leftSources": [
                   {
                     "type": "stepped",
-                    "logKey": "NT:/SmartDashboard/Sim Ball Count",
+                    "logKey": "NT:/SmartDashboard/FuelSim/Ball Count",
                     "logType": "Number",
                     "visible": true,
                     "options": {
-                      "color": "#2b66a2",
+                      "color": "#af2437",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/SmartDashboard/FuelSim/Score",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#80588e",
                       "size": "normal"
                     }
                   }
@@ -372,16 +376,37 @@
                 "leftSources": [
                   {
                     "type": "stepped",
-                    "logKey": "NT:/SmartDashboard/Distance to Hub",
+                    "logKey": "NT:/SmartDashboard/Hub/Distance",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#80588e",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "rightSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/SmartDashboard/Hub/Angle",
                     "logType": "Number",
                     "visible": true,
                     "options": {
                       "color": "#2b66a2",
                       "size": "normal"
                     }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/SmartDashboard/swerve/imu/adjusted",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#c0b487",
+                      "size": "normal"
+                    }
                   }
                 ],
-                "rightSources": [],
                 "discreteSources": [
                   {
                     "type": "stripes",
@@ -399,6 +424,15 @@
                     "visible": true,
                     "options": {
                       "color": "#af2437"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/SmartDashboard/Hub/Current Shift",
+                    "logType": "String",
+                    "visible": true,
+                    "options": {
+                      "color": "#e48b32"
                     }
                   }
                 ],
@@ -463,12 +497,30 @@
                       "color": "#858584",
                       "size": "normal"
                     }
-                  }
-                ],
-                "rightSources": [
+                  },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/SmartDashboard/swerve/modules/backleft/Adjusted Absolute Encoder",
+                    "logKey": "NT:/SmartDashboard/swerve/modules/backleft/Speed Setpoint",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#af2437",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/SmartDashboard/swerve/modules/backright/Speed Setpoint",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/SmartDashboard/swerve/modules/frontleft/Speed Setpoint",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -478,9 +530,31 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/SmartDashboard/swerve/modules/backright/Adjusted Absolute Encoder",
+                    "logKey": "NT:/SmartDashboard/swerve/modules/frontright/Speed Setpoint",
                     "logType": "Number",
                     "visible": true,
+                    "options": {
+                      "color": "#80588e",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "rightSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/SmartDashboard/swerve/modules/backleft/Adjusted Absolute Encoder",
+                    "logType": "Number",
+                    "visible": false,
+                    "options": {
+                      "color": "#e5b31b",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/SmartDashboard/swerve/modules/backright/Adjusted Absolute Encoder",
+                    "logType": "Number",
+                    "visible": false,
                     "options": {
                       "color": "#80588e",
                       "size": "normal"
@@ -490,7 +564,7 @@
                     "type": "stepped",
                     "logKey": "NT:/SmartDashboard/swerve/modules/frontleft/Adjusted Absolute Encoder",
                     "logType": "Number",
-                    "visible": true,
+                    "visible": false,
                     "options": {
                       "color": "#c0b487",
                       "size": "normal"
@@ -500,7 +574,7 @@
                     "type": "stepped",
                     "logKey": "NT:/SmartDashboard/swerve/modules/frontright/Adjusted Absolute Encoder",
                     "logType": "Number",
-                    "visible": true,
+                    "visible": false,
                     "options": {
                       "color": "#3b875a",
                       "size": "normal"
@@ -528,8 +602,8 @@
                   }
                 ],
                 "leftLockedRange": [
-                  -5,
-                  5
+                  -6,
+                  6
                 ],
                 "rightLockedRange": null,
                 "leftUnitConversion": {

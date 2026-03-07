@@ -13,6 +13,7 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Alerts": "Alerts",
+      "/SmartDashboard/CANFuelSubsystem": "Subsystem",
       "/SmartDashboard/Encoders": "Alerts",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/IMU": "Alerts",
@@ -21,6 +22,7 @@
       "/SmartDashboard/PathPlanner": "Alerts",
       "/SmartDashboard/PhotonAlerts": "Alerts",
       "/SmartDashboard/Pigeon 2 (v6) [13]": "Gyro",
+      "/SmartDashboard/Reset Fuel": "Command",
       "/SmartDashboard/SendableChooser[0]": "String Chooser",
       "/SmartDashboard/Swerve Drive": "Alerts",
       "/SmartDashboard/SwerveSubsystem": "Subsystem",
@@ -28,13 +30,23 @@
     },
     "windows": {
       "/SmartDashboard/Field": {
+        "OdometryPose": {
+          "length": 0.7900000214576721,
+          "width": 0.8999999761581421
+        },
+        "Robot": {
+          "length": 0.7900000214576721,
+          "width": 0.8999999761581421
+        },
         "VisionPose": {
           "color": [
             0.0,
             255.0,
             225.94937133789063,
             255.0
-          ]
+          ],
+          "length": 0.6899999976158142,
+          "width": 0.800000011920929
         },
         "XModules": {
           "arrowColor": [
@@ -52,6 +64,11 @@
         "right": 3942,
         "top": 118,
         "width": 16.54119300842285,
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Reset Fuel": {
         "window": {
           "visible": true
         }
@@ -116,6 +133,9 @@
         }
       },
       "SmartDashboard": {
+        "Launcher": {
+          "open": true
+        },
         "open": true
       }
     }

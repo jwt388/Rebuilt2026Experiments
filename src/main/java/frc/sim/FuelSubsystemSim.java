@@ -55,6 +55,7 @@ public class FuelSubsystemSim {
   private int ballCount = 0;
   private double launchDelay = 0.0;
   private double ejectDelay = 0.0;
+  private double intakeDelay = 0.0;
 
   /**
    * Create a new FuelSubsystemSim.
@@ -112,19 +113,28 @@ public class FuelSubsystemSim {
       ejectDelay -= 0.02;
     }
 
+    // Count down intake delay between
+    if (intakeDelay > 0.0) {
+      intakeDelay -= 0.02;
+    }
+
     FuelSim.getInstance().updateSim();
-    SmartDashboard.putNumber("Sim Ball Count", ballCount);
+    SmartDashboard.putNumber("FuelSim/Ball Count", ballCount);
+    SmartDashboard.putNumber("FuelSim/Score", FuelSim.getInstance().getScore());
   }
 
   /** Method to check if the intake can accept more balls. */
   public boolean canIntakeBalls() {
-    return (fuelSubsystem.getIntakeVelocity() > 100) && (ballCount < MAX_BALLS);
+    return (fuelSubsystem.getIntakeVelocity() > 100)
+        && (ballCount < MAX_BALLS)
+        && (intakeDelay <= 0.0);
   }
 
   /** Method to simulate adding a ball to the hopper. */
   public void addBallToHopper() {
     if (ballCount < MAX_BALLS) {
       ballCount++;
+      intakeDelay = TIME_BETWEEN_INTAKES;
     }
   }
 
@@ -143,7 +153,7 @@ public class FuelSubsystemSim {
         MetersPerSecond.of(
             RPM.of(LAUNCH_RATIO * fuelSubsystem.getLauncherVelocity()).in(RadiansPerSecond)
                 * FLYWHEEL_RADIUS.in(Meters));
-    Angle angle = Degrees.of(120.0);
+    Angle angle = Degrees.of(110.0);
     Translation3d initialVelocity = exitVel(linearVel, angle, ROBOT_TO_LAUNCHER_TRANSFORM);
     FuelSim.getInstance().spawnFuel(initialPosition, initialVelocity);
   }
