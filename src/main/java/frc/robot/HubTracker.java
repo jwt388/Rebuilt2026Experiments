@@ -234,6 +234,10 @@ public class HubTracker {
     SmartDashboard.putString("Hub/Active Type", activeTypeName);
     SmartDashboard.putBoolean("Hub/Is Active", isHubActive);
     SmartDashboard.putString("Hub/Auto Winner", winnerName);
-    SmartDashboard.putNumber("Hub/Match Time", getMatchTime());
+    SmartDashboard.putNumber("Hub/Match Time", DriverStation.getMatchTime());
+
+    var timeRemaining = HubTracker.timeRemainingInCurrentShift();
+    double timeRemainingSeconds = timeRemaining.isPresent() ? timeRemaining.get().in(Seconds) : 0.0;
+    SmartDashboard.putNumber("Hub/Shift Time Remaining", timeRemainingSeconds);
   }
 }
