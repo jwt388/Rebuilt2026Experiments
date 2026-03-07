@@ -135,6 +135,9 @@ public final class Constants {
     /** Speed scaling factor for POV/directional drive commands. */
     public static final double POV_SPEED = 0.1;
 
+    /** Turn scaling factor for POV forward command. */
+    public static final double POV_TURNING = 0.25;
+
     /** Enable/disable vision system for odometry correction. */
     public static final boolean ENABLE_VISION = true;
 
