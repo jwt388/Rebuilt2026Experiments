@@ -25,6 +25,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -40,6 +42,7 @@ import frc.robot.subsystems.swervedrive.Vision.Cameras;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.DoubleSupplier;
@@ -84,6 +87,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
   /** Calculates Closest Diamond Angle for Diamond Drive. */
   private double closestDiamondAngle;
+
+  private StructArrayPublisher<Pose2d> posePublisher =
+      NetworkTableInstance.getDefault().getStructArrayTopic("Target Pose", Pose2d.struct).publish();
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -317,16 +323,55 @@ public class SwerveSubsystem extends SubsystemBase {
    * Use PathPlanner Path finding to go to a point on the field.
    *
    * @param pose Target {@link Pose2d} to go to.
+   * @param endVelocity The velocity at which the robot should end at in meters per second.
    * @return PathFinding command
    */
-  public Command driveToPose(Pose2d pose) {
+  public Command driveToPose(Pose2d pose, double endVelocity) {
 
     // Since AutoBuilder is configured, we can use it to build path finding commands
-    return AutoBuilder.pathfindToPose(
-        pose,
-        DriveConstants.DRIVE_POSE_CONSTRAINTS,
-        edu.wpi.first.units.Units.MetersPerSecond.of(0) // Goal end velocity in meters/sec
-        );
+    return runOnce(() -> posePublisher.set(new Pose2d[] {pose})) // Log the pose
+        .andThen(
+            AutoBuilder.pathfindToPose(
+                pose,
+                DriveConstants.DRIVE_POSE_CONSTRAINTS,
+                edu.wpi.first.units.Units.MetersPerSecond.of(endVelocity)));
+  }
+
+  /**
+   * Align to a position and angle using HolonomicPID control for movement.
+   *
+   * @param pose Target {@link Pose2d} for aligning by PID control.
+   * @return PathFinding and PID command sequence
+   */
+  public Command alignToPosePID(Pose2d pose) {
+    return runOnce(() -> posePublisher.set(new Pose2d[] {pose})) // Log the pose
+        .andThen(
+            PositionPIDCommand.generateCommand(
+                this, pose, DriveConstants.AUTO_ALIGN_ADJUST_TIMEOUT));
+  }
+
+  /**
+   * Use PathPlanner path finding to go to a the start of a path and then follow the path.
+   *
+   * @param path Target {@link PathPlannerPath} to follow.
+   * @return PathFinding command
+   */
+  public Command driveAndFollowPath(PathPlannerPath path) {
+
+    // Since AutoBuilder is configured, we can use it to build path finding commands
+    return runOnce(
+            () -> { // Log the start and end pose of the path
+              var plotPath = path;
+              if (isRedAlliance()) {
+                plotPath = path.flipPath(); // following flips automatically, but flip for plotting
+              }
+              List<Pose2d> poseList =
+                  plotPath.getAllPathPoints().stream()
+                      .map(point -> new Pose2d(point.position, new Rotation2d()))
+                      .toList();
+              posePublisher.set(new Pose2d[] {poseList.get(0), poseList.get(poseList.size() - 1)});
+            })
+        .andThen(AutoBuilder.pathfindThenFollowPath(path, DriveConstants.DRIVE_POSE_CONSTRAINTS));
   }
 
   /**
@@ -338,23 +383,24 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return PathFinding and PID command sequence
    */
   public Command driveToPosePID(Pose2d pose1, Pose2d pose2) {
-    return
-    // Path find to near the target pose
-    AutoBuilder.pathfindToPose(
-            pose1,
-            DriveConstants.DRIVE_POSE_CONSTRAINTS,
-            DriveConstants.PATH_FIND_END_VELOCITY) // Goal end velocity in meters/sec
-        .until(
-            () ->
-                poseIsNear(
-                    pose1,
-                    getPose(),
-                    DriveConstants.DISTANCE_UNTIL_PID,
-                    DriveConstants.ROTATION_GOAL_BEFORE_PID))
-        // Then switch to Holonomic pid control.
+    return runOnce(() -> posePublisher.set(new Pose2d[] {pose1, pose2})) // Log the poses
         .andThen(
-            PositionPIDCommand.generateCommand(
-                this, pose2, DriveConstants.AUTO_ALIGN_ADJUST_TIMEOUT));
+            // Path find to near the target pose
+            AutoBuilder.pathfindToPose(
+                    pose1,
+                    DriveConstants.DRIVE_POSE_CONSTRAINTS,
+                    DriveConstants.PATH_FIND_END_VELOCITY) // Goal end velocity in meters/sec
+                .until(
+                    () ->
+                        poseIsNear(
+                            pose1,
+                            getPose(),
+                            DriveConstants.DISTANCE_UNTIL_PID,
+                            DriveConstants.ROTATION_GOAL_BEFORE_PID))
+                // Then switch to Holonomic pid control.
+                .andThen(
+                    PositionPIDCommand.generateCommand(
+                        this, pose2, DriveConstants.AUTO_ALIGN_ADJUST_TIMEOUT)));
   }
 
   /**

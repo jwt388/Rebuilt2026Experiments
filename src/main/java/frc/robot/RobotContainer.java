@@ -8,6 +8,12 @@ import static edu.wpi.first.units.Units.Seconds;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -28,6 +34,7 @@ import frc.robot.subsystems.CANFuelSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+import java.util.List;
 import java.util.Set;
 import swervelib.SwerveInputStream;
 
@@ -198,6 +205,31 @@ public class RobotContainer {
     driverController.povDown().whileTrue(shiftBack);
     driverController.povRight().whileTrue(shiftRight);
     driverController.povLeft().whileTrue(shiftLeft);
+
+    driverController.a().whileTrue(game.driveHubCommand().withName("Drive to Hub"));
+    driverController.b().whileTrue(drivebase.driveToPose(new Pose2d(), 1.0));
+
+    /** Positions for entry and exist of the trench in meters. */
+    double BLUE_TRENCH_NEUTRAL_X = 6.2;
+    double BLUE_TRENCH_BLUE_X = 3.2;
+    double TRENCH_Y = 0.625;
+
+    Pose2d startPose = new Pose2d(BLUE_TRENCH_NEUTRAL_X, TRENCH_Y, Rotation2d.fromDegrees(180));
+    Pose2d endPose = new Pose2d(BLUE_TRENCH_BLUE_X, TRENCH_Y, Rotation2d.fromDegrees(180));
+    List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(startPose, endPose);
+
+    PathConstraints constraints =
+        new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
+
+    // Create the path using the waypoints created above
+    PathPlannerPath path =
+        new PathPlannerPath(
+            waypoints,
+            constraints,
+            null, // The ideal starting state, this is not relevant for on-the-fly paths.
+            new GoalEndState(1.5, Rotation2d.fromDegrees(90))); // Goal end state.
+
+    driverController.x().whileTrue(drivebase.driveAndFollowPath(path));
 
     // Zero the gyro when 'start' is pressed on the driver's controller
     driverController
