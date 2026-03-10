@@ -9,7 +9,6 @@ import static edu.wpi.first.units.Units.Seconds;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -218,14 +217,11 @@ public class RobotContainer {
     Pose2d endPose = new Pose2d(BLUE_TRENCH_BLUE_X, TRENCH_Y, Rotation2d.fromDegrees(180));
     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(startPose, endPose);
 
-    PathConstraints constraints =
-        new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
-
     // Create the path using the waypoints created above
     PathPlannerPath path =
         new PathPlannerPath(
             waypoints,
-            constraints,
+            DriveConstants.DRIVE_POSE_CONSTRAINTS,
             null, // The ideal starting state, this is not relevant for on-the-fly paths.
             new GoalEndState(1.5, Rotation2d.fromDegrees(90))); // Goal end state.
 

@@ -14,6 +14,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 import com.revrobotics.spark.SparkFlex;
@@ -42,7 +43,6 @@ import frc.robot.subsystems.swervedrive.Vision.Cameras;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.DoubleSupplier;
@@ -238,6 +238,9 @@ public class SwerveSubsystem extends SubsystemBase {
           // Reference to this subsystem to set requirements
           );
 
+      // Logging callback for the active path, this is sent as a list of poses
+      PathPlannerLogging.setLogActivePathCallback(
+          poses -> swerveDrive.field.getObject("path").setPoses(poses));
     } catch (Exception e) {
       // Handle exception as needed
       e.printStackTrace();
@@ -357,21 +360,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return PathFinding command
    */
   public Command driveAndFollowPath(PathPlannerPath path) {
-
-    // Since AutoBuilder is configured, we can use it to build path finding commands
-    return runOnce(
-            () -> { // Log the start and end pose of the path
-              var plotPath = path;
-              if (isRedAlliance()) {
-                plotPath = path.flipPath(); // following flips automatically, but flip for plotting
-              }
-              List<Pose2d> poseList =
-                  plotPath.getAllPathPoints().stream()
-                      .map(point -> new Pose2d(point.position, new Rotation2d()))
-                      .toList();
-              posePublisher.set(new Pose2d[] {poseList.get(0), poseList.get(poseList.size() - 1)});
-            })
-        .andThen(AutoBuilder.pathfindThenFollowPath(path, DriveConstants.DRIVE_POSE_CONSTRAINTS));
+    return AutoBuilder.pathfindThenFollowPath(path, DriveConstants.DRIVE_POSE_CONSTRAINTS);
   }
 
   /**
