@@ -253,7 +253,7 @@ public final class Constants {
 
     public static final Transform3d ROBOT_TO_LAUNCHER_TRANSFORM =
         new Transform3d(
-            new Translation3d(Inches.zero(), Inches.zero(), Inches.of(18.0)), Rotation3d.kZero);
+            new Translation3d(Inches.of(10.0), Inches.zero(), Inches.of(18.0)), Rotation3d.kZero);
     public static final Transform3d ROBOT_TO_EJECT_TRANSFORM =
         new Transform3d(
             new Translation3d(Inches.of(15.0), Inches.zero(), Inches.of(2.0)), Rotation3d.kZero);
@@ -262,6 +262,6 @@ public final class Constants {
     public static final double TIME_BETWEEN_INTAKES = 0.3;
     public static final double TIME_BETWEEN_EJECTS = 0.3;
     public static final double LAUNCH_RATIO =
-        0.375; // Ratio of ball exit velocity launcher to wheel edge speed
+        0.4; // Ratio of ball exit velocity launcher to wheel edge speed
   }
 }

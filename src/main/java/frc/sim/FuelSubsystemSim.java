@@ -51,7 +51,7 @@ public class FuelSubsystemSim {
       LinearSystemId.createDCMotorSystem(motorGearbox, INTAKE_MOTOR_MOI_KG_METERS2, 1);
   private final DCMotorSim intakeMotorSim = new DCMotorSim(intakePlant, motorGearbox);
 
-  private static final int MAX_BALLS = 12;
+  private static final int MAX_BALLS = 20;
   private int ballCount = 0;
   private double launchDelay = 0.0;
   private double ejectDelay = 0.0;
