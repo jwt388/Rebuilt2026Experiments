@@ -14,6 +14,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 import com.revrobotics.spark.SparkFlex;
@@ -232,6 +233,9 @@ public class SwerveSubsystem extends SubsystemBase {
           // Reference to this subsystem to set requirements
           );
 
+      // Logging callback for the active path, this is sent as a list of poses
+      PathPlannerLogging.setLogActivePathCallback(
+          poses -> swerveDrive.field.getObject("path").setPoses(poses));
     } catch (Exception e) {
       // Handle exception as needed
       e.printStackTrace();
