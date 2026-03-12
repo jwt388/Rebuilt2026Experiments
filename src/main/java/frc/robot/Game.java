@@ -148,18 +148,17 @@ public class Game {
           // Offsets for robot when launching and approaching
           double launchOffset = Units.feetToMeters(7.0);
           double approachOffset = Units.feetToMeters(9.0);
-          Rotation2d hubAngle = getAngleToHub();
+          Rotation2d hubAngle = getHubToRobotAngle();
 
           // Movement for robot to shooting and approach location
           Translation2d launchTranslation = new Translation2d(launchOffset, hubAngle);
           Translation2d approachTranslation = new Translation2d(approachOffset, hubAngle);
-          Rotation2d targetRotation = getAngleToHub();
 
           // Actual robot positions
           Pose2d launchPose =
-              new Pose2d(hubCenter.getTranslation().plus(launchTranslation), targetRotation);
+              new Pose2d(hubCenter.getTranslation().plus(launchTranslation), hubAngle);
           Pose2d approachPose =
-              new Pose2d(hubCenter.getTranslation().plus(approachTranslation), targetRotation);
+              new Pose2d(hubCenter.getTranslation().plus(approachTranslation), hubAngle);
 
           // Log and push to dashboard
           DataLogManager.log("Drive to Hub Approach: " + approachPose);
