@@ -167,9 +167,13 @@ public class SwerveSubsystem extends SubsystemBase {
       SparkFlex driveMotor = (SparkFlex) module.getDriveMotor().getMotor();
       SmartDashboard.putNumber(
           "swerve/Drive Temp/" + module.moduleNumber, driveMotor.getMotorTemperature());
+      SmartDashboard.putNumber(
+          "swerve/Drive Current/" + module.moduleNumber, driveMotor.getOutputCurrent());
       SparkMax angleMotor = (SparkMax) module.getAngleMotor().getMotor();
       SmartDashboard.putNumber(
           "swerve/Angle Temp/" + module.moduleNumber, angleMotor.getMotorTemperature());
+      SmartDashboard.putNumber(
+          "swerve/Angle Current/" + module.moduleNumber, angleMotor.getOutputCurrent());
     }
   }
 
