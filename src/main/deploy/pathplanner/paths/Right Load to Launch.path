@@ -4,28 +4,28 @@
     {
       "anchor": {
         "x": 7.6,
-        "y": 5.3
+        "y": 2.74
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.882180722891565,
-        "y": 5.291686746987953
+        "x": 6.882,
+        "y": 2.74
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.868640429338104,
-        "y": 7.417996422182468
+        "x": 5.852415026833631,
+        "y": 0.6357781753130587
       },
       "prevControl": {
-        "x": 6.504586060616452,
-        "y": 7.330131520903623
+        "x": 6.4883743525792985,
+        "y": 0.7236402034999602
       },
       "nextControl": {
-        "x": 5.132301910383672,
-        "y": 7.519732023613818
+        "x": 5.11607575988324,
+        "y": 0.5340479878485369
       },
       "isLocked": false,
       "linkedName": null
@@ -33,15 +33,15 @@
     {
       "anchor": {
         "x": 3.4656336822684346,
-        "y": 7.2437222076682835
+        "y": 0.8
       },
       "prevControl": {
-        "x": 3.9951073327611186,
-        "y": 7.58164226925272
+        "x": 3.995006541433528,
+        "y": 0.4621414852643577
       },
       "nextControl": {
-        "x": 2.9361600317757497,
-        "y": 6.905802146083847
+        "x": 2.9361612927764034,
+        "y": 1.1379220373886234
       },
       "isLocked": false,
       "linkedName": null
@@ -49,11 +49,11 @@
     {
       "anchor": {
         "x": 3.4,
-        "y": 5.6
+        "y": 2.44
       },
       "prevControl": {
-        "x": 3.073308512946458,
-        "y": 6.315706656345705
+        "x": 3.073199014210487,
+        "y": 1.7240599775909975
       },
       "nextControl": null,
       "isLocked": false,
@@ -63,11 +63,11 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1.0,
-      "rotationDegrees": 88.40885972880542
+      "rotationDegrees": -88.409
     },
     {
-      "waypointRelativePos": 2,
-      "rotationDegrees": 96.6754593171853
+      "waypointRelativePos": 2.0,
+      "rotationDegrees": -96.675
     }
   ],
   "constraintZones": [],
@@ -83,13 +83,13 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 130.0
+    "rotation": -130.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }
