@@ -23,25 +23,26 @@
             "/NT/photonvision/Arducam_OV9281_Right",
             "/NT/photonvision/Arducam_OV9281_Right/targetPose",
             "/NT/photonvision/Arducam_OV9281_Right/targetPose/translation",
-            "/NT/photonvision",
             "/photonvision/Arducam_OV9281_Left/rawBytes/targets",
             "/photonvision/Arducam_OV9281_Left/rawBytes/metadata",
             "/photonvision/Arducam_OV9281_Left/targetPose/translation",
-            "/SmartDashboard/swerve/modules/frontright",
-            "/SmartDashboard/swerve/imu",
-            "/NT/SmartDashboard",
             "/NT/SmartDashboard/Swerve Drive/errors",
             "/NT/SmartDashboard/swerve/modules",
             "/NT/SmartDashboard/Robot",
             "/NT/SmartDashboard/TunableNumbers",
-            "/NT/SmartDashboard/PDP",
             "/battery",
             "/NT/SmartDashboard/Battery",
-            "/Fuel Simulation"
+            "/Target Pose/0",
+            "/Target Pose/0/translation",
+            "/Target Pose/1",
+            "/Target Pose/1/translation",
+            "/Target Pose/0/rotation",
+            "/Target Pose/1/rotation",
+            "/NT/SmartDashboard/Hub"
           ]
         },
         "tabs": {
-          "selected": 4,
+          "selected": 3,
           "tabs": [
             {
               "type": 0,
@@ -89,14 +90,35 @@
                     }
                   },
                   {
-                    "type": "ghostLegacy",
+                    "type": "robotLegacy",
                     "logKey": "NT:/SmartDashboard/Field/Robot",
                     "logType": "NumberArray",
-                    "visible": false,
+                    "visible": true,
                     "options": {
-                      "color": "#00ff00",
+                      "bumpers": "",
                       "format": "Pose2d",
                       "units": "degrees"
+                    }
+                  },
+                  {
+                    "type": "trajectory",
+                    "logKey": "NT:Target Pose",
+                    "logType": "Pose2d[]",
+                    "visible": true,
+                    "options": {
+                      "color": "#ff00ff",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "trajectoryLegacy",
+                    "logKey": "NT:/SmartDashboard/Field/path",
+                    "logType": "NumberArray",
+                    "visible": true,
+                    "options": {
+                      "color": "#00ff00",
+                      "size": "normal",
+                      "format": "Pose2d"
                     }
                   }
                 ],
@@ -253,7 +275,10 @@
                   }
                 ],
                 "leftLockedRange": null,
-                "rightLockedRange": null,
+                "rightLockedRange": [
+                  -4500,
+                  6000
+                ],
                 "leftUnitConversion": {
                   "autoTarget": null,
                   "preset": null
@@ -350,6 +375,112 @@
                 "rightFilter": 0
               },
               "controllerUUID": "xppksu49sari9y7c4x8nqlqxm6b1ervx",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 1,
+              "title": "Auto Drive",
+              "controller": {
+                "leftSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:Target Pose/0/translation/x",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:Target Pose/0/translation/y",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#e5b31b",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:Target Pose/1/translation/x",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#af2437",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:Target Pose/1/translation/y",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#80588e",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/SmartDashboard/Field/Robot/0",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#c0b487",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/SmartDashboard/Field/Robot/1",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#858584",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "rightSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/SmartDashboard/swerve/imu/adjusted",
+                    "logType": "Number",
+                    "visible": false,
+                    "options": {
+                      "color": "#e48b32",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "discreteSources": [
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/SmartDashboard/SwerveSubsystem/.command",
+                    "logType": "String",
+                    "visible": true,
+                    "options": {
+                      "color": "#3b875a"
+                    }
+                  }
+                ],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "rightUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "8cgiy8pdirn6q52eiga8p4cgfg7z18dn",
               "renderer": null,
               "controlsHeight": 200
             },
@@ -736,6 +867,16 @@
                       "color": "#af2437",
                       "size": "normal"
                     }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/SmartDashboard/Battery/AmpHoursUsed",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#c0b487",
+                      "size": "normal"
+                    }
                   }
                 ],
                 "rightSources": [
@@ -771,12 +912,12 @@
                   }
                 ],
                 "leftLockedRange": [
-                  6,
+                  0,
                   14
                 ],
                 "rightLockedRange": [
                   0,
-                  180
+                  200
                 ],
                 "leftUnitConversion": {
                   "autoTarget": null,

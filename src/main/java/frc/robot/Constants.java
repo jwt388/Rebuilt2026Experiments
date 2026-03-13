@@ -164,7 +164,7 @@ public final class Constants {
      * angular acceleration).
      */
     public static final PathConstraints DRIVE_POSE_CONSTRAINTS =
-        new PathConstraints(1.0, 4.0, Units.degreesToRadians(180), Units.degreesToRadians(720));
+        new PathConstraints(2.0, 4.0, Units.degreesToRadians(180), Units.degreesToRadians(720));
 
     /** Distance from target at which to switch to PID control in meters. */
     public static final double DISTANCE_UNTIL_PID = Units.inchesToMeters(3);
@@ -205,10 +205,10 @@ public final class Constants {
     }
 
     // Motor controller IDs for Fuel Mechanism motors
-    public static final int FEEDER_MOTOR_ID = 16;
-    public static final int LAUNCHER_MOTOR_ID = 15;
-    public static final int LAUNCHER_MOTOR2_ID = 17;
-    public static final int INTAKE_MOTOR_ID = 14;
+    public static final int FEEDER_MOTOR_ID = 17;
+    public static final int LAUNCHER_MOTOR_ID = 14;
+    public static final int LAUNCHER_MOTOR2_ID = 15;
+    public static final int INTAKE_MOTOR_ID = 16;
 
     // Current limit and nominal voltage for fuel mechanism motors.
     public static final int FEEDER_MOTOR_CURRENT_LIMIT = 20;

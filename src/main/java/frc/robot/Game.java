@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -9,9 +10,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.CANFuelSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /** The Game class contains functions specific to the game. */
@@ -31,6 +34,10 @@ public class Game {
   private static final double HUB_HEADING_TOL_DEG = 2.5;
   private static final double HUB_MIN_RADIUS_M = Units.feetToMeters(4.0);
   private static final double HUB_MAX_RADIUS_M = Units.feetToMeters(10.0);
+
+  // Offsets for robot when launching and approaching
+  private static final double LAUNCH_OFFSET = Units.feetToMeters(4.5);
+  private static final double APPROACH_OFFSET = Units.feetToMeters(5.5);
 
   /** Constructor for the Game class. */
   public Game(RobotContainer robotContainer) {
@@ -139,5 +146,44 @@ public class Game {
   public void periodic() {
     SmartDashboard.putNumber("Hub/Distance", getDistanceToHub());
     SmartDashboard.putNumber("Hub/Angle", getAngleToHub().getDegrees());
+  }
+
+  /**
+   * Creates a command to drive diagonally in front of the nearest hub. The target is exactly a
+   * 7-foot hypotenuse away.
+   */
+  public Command driveHubCommand() {
+    // Ensures everything runs at run time, instead of after
+    return Commands.defer(
+        () -> {
+          // Pose of robot at hub
+          Pose2d hubCenter = getHubCenterPose();
+          Rotation2d hubAngle = getHubToRobotAngle();
+
+          // Limit the target angle to a range in the alliance zone
+          double angleToHub;
+          if (drivebase.isRedAlliance()) {
+            angleToHub = MathUtil.clamp(hubAngle.getDegrees(), -45, 45);
+          } else {
+            angleToHub =
+                MathUtil.clamp(hubAngle.minus(Rotation2d.fromDegrees(180)).getDegrees(), -45, 45)
+                    + 180.0;
+          }
+          hubAngle = Rotation2d.fromDegrees(angleToHub);
+
+          // Movement for robot to shooting and approach location
+          Translation2d launchTranslation = new Translation2d(LAUNCH_OFFSET, hubAngle);
+          Translation2d approachTranslation = new Translation2d(APPROACH_OFFSET, hubAngle);
+
+          // Actual robot positions
+          Pose2d launchPose =
+              new Pose2d(hubCenter.getTranslation().plus(launchTranslation), hubAngle);
+          Pose2d approachPose =
+              new Pose2d(hubCenter.getTranslation().plus(approachTranslation), hubAngle);
+
+          // Return command to drive
+          return drivebase.driveToPosePID(approachPose, launchPose);
+        },
+        Set.of(drivebase));
   }
 }

@@ -16,44 +16,44 @@
     },
     {
       "anchor": {
-        "x": 5.52700427960057,
-        "y": 7.444336661911555
+        "x": 5.5211447632352675,
+        "y": 7.40851001584706
       },
       "prevControl": {
-        "x": 6.1935946410525915,
-        "y": 7.446951119748246
+        "x": 6.157090394513616,
+        "y": 7.320645114568215
       },
       "nextControl": {
-        "x": 4.783676594558047,
-        "y": 7.44142122988047
+        "x": 4.784806244280835,
+        "y": 7.51024561727841
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.443880171184022,
-        "y": 7.327888730385164
+        "x": 3.4656336822684346,
+        "y": 7.2437222076682835
       },
       "prevControl": {
-        "x": 3.973353821676706,
-        "y": 7.6658087919696
+        "x": 3.9951073327611186,
+        "y": 7.58164226925272
       },
       "nextControl": {
-        "x": 2.914406520691337,
-        "y": 6.989968668800727
+        "x": 2.9361600317757497,
+        "y": 6.905802146083847
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.3274322396576315,
-        "y": 5.775249643366619
+        "x": 3.4,
+        "y": 5.6
       },
       "prevControl": {
-        "x": 2.9392724679029953,
-        "y": 6.590385164051355
+        "x": 3.073308512946458,
+        "y": 6.315706656345705
       },
       "nextControl": null,
       "isLocked": false,
@@ -67,14 +67,14 @@
     },
     {
       "waypointRelativePos": 2,
-      "rotationDegrees": 90.88408497902147
+      "rotationDegrees": 96.6754593171853
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.5,
+    "maxVelocity": 2.0,
     "maxAcceleration": 6.0,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 720.0,
@@ -82,8 +82,8 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 128.75402749304774
+    "velocity": 0.0,
+    "rotation": 130.0
   },
   "reversed": false,
   "folder": null,

@@ -195,8 +195,11 @@ public class RobotContainer {
     // adjust the robot to face the hub while driving
     driverController.leftTrigger().whileTrue(aimHubDrive);
 
-    // Drives the robot slowly to a set position based on which of the pov buttons is pressed on the
-    // driver's controller
+    // Drive to a launch position near the hub when the A button is pressed
+    driverController.a().whileTrue(game.driveHubCommand().withName("Drive to Hub"));
+
+    // Drives robot oriented slowly at a set speed based on which of the pov buttons is pressed on
+    // the driver's controller
     driverController.povUp().whileTrue(shiftForward);
     driverController.povDown().whileTrue(shiftBack);
     driverController.povRight().whileTrue(shiftRight);
