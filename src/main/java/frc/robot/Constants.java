@@ -133,7 +133,7 @@ public final class Constants {
     public static final double WHEEL_LOCK_TIME = 10; // seconds
 
     /** Speed scaling factor for POV/directional drive commands. */
-    public static final double POV_SPEED = 0.2;
+    public static final double POV_SPEED = 0.15;
 
     /** Turn scaling factor for POV forward command. */
     public static final double POV_TURNING = 0.50;
