@@ -163,10 +163,10 @@ public class Game {
           // Limit the target angle to a range in the alliance zone
           double angleToHub;
           if (drivebase.isRedAlliance()) {
-            angleToHub = MathUtil.clamp(hubAngle.getDegrees(), -45, 45);
+            angleToHub = MathUtil.clamp(hubAngle.getDegrees(), -35, 35);
           } else {
             angleToHub =
-                MathUtil.clamp(hubAngle.minus(Rotation2d.fromDegrees(180)).getDegrees(), -45, 45)
+                MathUtil.clamp(hubAngle.minus(Rotation2d.fromDegrees(180)).getDegrees(), -35, 35)
                     + 180.0;
           }
           hubAngle = Rotation2d.fromDegrees(angleToHub);

@@ -143,7 +143,13 @@
         }
       },
       "SmartDashboard": {
+        "Hub": {
+          "open": true
+        },
         "Launcher": {
+          "open": true
+        },
+        "Launcher2": {
           "open": true
         },
         "open": true
