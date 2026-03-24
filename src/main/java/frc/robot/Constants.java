@@ -223,7 +223,6 @@ public final class Constants {
     public static final double LAUNCHING_FEEDER_VOLTAGE = 9;
     public static final double LAUNCHING_INTAKE_VOLTAGE = 4;
     public static final double SPIN_UP_FEEDER_VOLTAGE = -6;
-    // public static final double SPIN_UP_SECONDS = 1.0;
     public static final double EJECTING_FEEDER_VOLTAGE = 12;
     public static final double EJECTING_INTAKE_VOLTAGE = -6;
     public static final double LAUNCH_SPINUP_THRESHOLD = 0.88;

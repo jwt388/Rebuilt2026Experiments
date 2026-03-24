@@ -44,7 +44,7 @@
     "###Addressable LEDs": {
       "Collapsed": "0",
       "Pos": "1242,394",
-      "Size": "471,183"
+      "Size": "243,183"
     },
     "###FMS": {
       "Collapsed": "0",
@@ -54,7 +54,7 @@
     "###Joysticks": {
       "Collapsed": "0",
       "Pos": "258,878",
-      "Size": "796,240"
+      "Size": "796,73"
     },
     "###NetworkTables": {
       "Collapsed": "0",
