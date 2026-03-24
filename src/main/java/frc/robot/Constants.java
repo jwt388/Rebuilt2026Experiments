@@ -228,7 +228,7 @@ public final class Constants {
     public static final double LAUNCH_SPINUP_THRESHOLD = 0.88;
     public static final double RATE_LIMIT = 999.0; // volts per second
     public static final double ENABLE_LAUNCH_TABLE = 1;
-    public static final LUT LAUNCH_TABLE = new LUT(new double[][] {{1.5, 3000}, {4.5, 4700}});
+    public static final LUT LAUNCH_TABLE = new LUT(new double[][] {{1.5, 2800}, {4.5, 4500}});
 
     // Constants tunable through TunableNumbers
     public static final double LAUNCHER_SPEED_RPM = 3200.0;
