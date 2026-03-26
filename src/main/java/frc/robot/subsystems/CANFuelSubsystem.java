@@ -263,6 +263,8 @@ public class CANFuelSubsystem extends SubsystemBase {
         .kV(velocityGain.get());
     launcherRoller.configure(
         launcherConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    launcherRoller2.configure(
+        launcherConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
   }
 
   // Functions for simulation purposes
