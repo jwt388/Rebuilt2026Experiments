@@ -154,10 +154,12 @@ public class CANFuelSubsystem extends SubsystemBase {
    * the distance from the robot to the hub Feeder voltage is set automatically in the periodic
    * function based on whether the launcher is up to speed or not to help with launch consistency.
    */
-  public void launch() {
+  public void launch(boolean passing) {
     loadPidfTunableNumbers();
     launcherEnabled = true;
-    if (enableLaunchTable.get() > 0.0) {
+    if (passing) {
+      launcherGoal = FuelConstants.PASSING_SPEED_RPM;
+    } else if (enableLaunchTable.get() > 0.0) {
       launcherGoal = FuelConstants.LAUNCH_TABLE.get(game.getDistanceToHub())[1];
     } else {
       launcherGoal = launcherRpm.get();
@@ -178,8 +180,8 @@ public class CANFuelSubsystem extends SubsystemBase {
   }
 
   /** A command factory to turn the launch method into a command that requires this subsystem. */
-  public Command launchCommand() {
-    return this.runEnd(this::launch, this::stop);
+  public Command launchCommand(boolean passing) {
+    return this.runEnd(() -> launch(passing), this::stop);
   }
 
   /** A command factory to turn the eject method into a command that requires this subsystem. */
