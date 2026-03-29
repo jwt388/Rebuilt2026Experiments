@@ -229,7 +229,7 @@ public final class Constants {
     public static final double RATE_LIMIT = 999.0; // volts per second
     public static final double ENABLE_LAUNCH_TABLE = 1;
     public static final LUT LAUNCH_TABLE = new LUT(new double[][] {{1.5, 2750}, {4.5, 4450}});
-    public static final double PASSING_SPEED_RPM = 4500.0;
+    public static final double PASSING_SPEED_RPM = 3500.0;
 
     // Constants tunable through TunableNumbers
     public static final double LAUNCHER_SPEED_RPM = 3200.0;
