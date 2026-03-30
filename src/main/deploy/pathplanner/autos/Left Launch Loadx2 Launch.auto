@@ -23,7 +23,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Load from Left"
+                  "pathName": "Loadx2 from Left"
                 }
               },
               {
@@ -38,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of Left Load to Launch"
+            "pathName": "Left Loadx2 to Launch"
           }
         },
         {

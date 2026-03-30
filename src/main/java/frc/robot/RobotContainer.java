@@ -160,8 +160,9 @@ public class RobotContainer {
     drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
 
     // Named Commands for Autos
-    NamedCommands.registerCommand("Launch 8", ballSubsystem.launchCommand().withTimeout(3.0));
-    NamedCommands.registerCommand("Launch Full", ballSubsystem.launchCommand().withTimeout(5.0));
+    NamedCommands.registerCommand("Launch 8", ballSubsystem.launchCommand(false).withTimeout(3.0));
+    NamedCommands.registerCommand(
+        "Launch Full", ballSubsystem.launchCommand(false).withTimeout(5.0));
     NamedCommands.registerCommand("Intake", ballSubsystem.intakeCommand().withTimeout(10.0));
 
     // Setup the auto command chooser using the PathPlanner autos
@@ -218,10 +219,14 @@ public class RobotContainer {
 
     // While the right bumper on the operator controller is held, spin up for 1
     // second, then launch fuel. When the button is released, stop.
-    operatorController.rightBumper().whileTrue(ballSubsystem.launchCommand().withName("Launch"));
+    operatorController
+        .rightBumper()
+        .whileTrue(ballSubsystem.launchCommand(false).withName("Launch"));
     // While the A button is held on the operator controller, eject fuel back out
     // the intake
     operatorController.a().whileTrue(ballSubsystem.ejectCommand().withName("Eject"));
+
+    operatorController.x().whileTrue(ballSubsystem.launchCommand(true).withName("Passing"));
   }
 
   /**
