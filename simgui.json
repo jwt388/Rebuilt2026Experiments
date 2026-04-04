@@ -143,7 +143,13 @@
         }
       },
       "SmartDashboard": {
+        "Feeder": {
+          "open": true
+        },
         "Hub": {
+          "open": true
+        },
+        "Intake": {
           "open": true
         },
         "Launcher": {
