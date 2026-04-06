@@ -13,32 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right to Intake"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Loadx2 from Right"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Right Loadx2 to Launch"
+            "pathName": "Right Launch Loadx2 Launch"
           }
         },
         {
